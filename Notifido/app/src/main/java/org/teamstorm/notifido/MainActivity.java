@@ -25,6 +25,13 @@ public class MainActivity extends AppCompatActivity {
     private ImageView mLogoView;
     private boolean mScreenIsRed = false;
     private RelativeLayout mLayout;
+    private TextView mMessageView;
+    private int mMessageIndex = 0;
+
+    private String[] mMessages = new String[] {
+            "Time for medicine!",
+            "Appointment time!",
+            "Time to wake up!"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mLayout = (RelativeLayout)findViewById(R.id.activity_main);
+        mMessageView = (TextView)findViewById(R.id.message);
         mCounterView = (TextView)findViewById(R.id.counter);
         mLogoView = (ImageView)findViewById(R.id.logo);
         mButton = (ImageButton)findViewById(R.id.button);
@@ -73,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 // TODO: alarm done
                 mFlashTime = 30;
             } else {
+                mMessageView.setVisibility(View.GONE);
                 mButton.setVisibility(View.GONE);
                 mCounterView.setVisibility(View.VISIBLE);
                 mCounterView.setText("" + (mAlarmTime / 10 + 1));
@@ -80,6 +89,9 @@ public class MainActivity extends AppCompatActivity {
             }
         } else if (mFlashTime > 0) {
             mCounterView.setVisibility(View.GONE);
+            mMessageView.setVisibility(View.VISIBLE);
+            mButton.setVisibility(View.INVISIBLE);
+            mMessageView.setText(mMessages[mMessageIndex]);
             mScreenIsRed = !mScreenIsRed;
             mFlashTime--;
             int backgroundRes = mScreenIsRed ? android.R.color.holo_red_light : android.R.color.white;
@@ -88,6 +100,8 @@ public class MainActivity extends AppCompatActivity {
                 // flashing done
                 mButton.setVisibility(View.VISIBLE);
                 mLayout.setBackgroundColor(ContextCompat.getColor(this, android.R.color.darker_gray));
+                mMessageIndex++;
+                mMessageIndex %= mMessages.length;
             }
         }
     }
